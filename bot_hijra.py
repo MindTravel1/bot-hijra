@@ -96,24 +96,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• Je t’enverrai chaque jour un rappel 📖 et un quiz 🇹🇳 !"
     )
 
-app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-app.add_handler(ChatMemberHandler(welcome, ChatMemberHandler.CHAT_MEMBER))
+async def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(ChatMemberHandler(welcome, ChatMemberHandler.CHAT_MEMBER))
 
-job_queue = JobQueue()
-job_queue.set_application(app)
-job_queue.start()
+    job_queue = app.job_queue
+    await job_queue.start()
 
-chat_id_groupe = -1002504033435
-job_queue.run_daily(send_rappel, time(hour=9), chat_id=chat_id_groupe)
-job_queue.run_daily(send_rappel, time(hour=14), chat_id=chat_id_groupe)
-job_queue.run_daily(send_rappel, time(hour=20), chat_id=chat_id_groupe)
-job_queue.run_daily(send_quiz, time(hour=17), chat_id=chat_id_groupe)
+    chat_id_groupe = -1002504033435
+    job_queue.run_daily(send_rappel, time(hour=9), chat_id=chat_id_groupe)
+    job_queue.run_daily(send_rappel, time(hour=14), chat_id=chat_id_groupe)
+    job_queue.run_daily(send_rappel, time(hour=20), chat_id=chat_id_groupe)
+    job_queue.run_daily(send_quiz, time(hour=17), chat_id=chat_id_groupe)
 
-job_queue.run_daily(rappel_prive, time(hour=10))
-job_queue.run_daily(rappel_prive, time(hour=15))
-job_queue.run_daily(rappel_prive, time(hour=21))
+    job_queue.run_daily(rappel_prive, time(hour=10))
+    job_queue.run_daily(rappel_prive, time(hour=15))
+    job_queue.run_daily(rappel_prive, time(hour=21))
 
-print("✅ Bot lancé avec succès...")
-app.run_polling()
+    print("✅ Bot lancé avec succès...")
+    await app.run_polling()
+
+import asyncio
+asyncio.run(main())
