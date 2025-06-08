@@ -7,7 +7,7 @@ from telegram.ext import (
 import random
 import os
 
-TOKEN = "8138157778:AAHnQIe1g6md147PbsVjzjECtZMd3iHJzkc"
+TOKEN = os.getenv("BOT_TOKEN")
 
 users_interactifs = set()
 
