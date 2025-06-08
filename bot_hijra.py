@@ -119,4 +119,12 @@ async def main():
     await app.run_polling()
 
 import asyncio
-asyncio.run(main())
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except RuntimeError:
+        # Render a déjà une boucle en cours
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+
