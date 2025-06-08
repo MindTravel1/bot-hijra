@@ -103,7 +103,6 @@ async def main():
     app.add_handler(ChatMemberHandler(welcome, ChatMemberHandler.CHAT_MEMBER))
 
     job_queue = app.job_queue
-    await job_queue.start()
 
     chat_id_groupe = -1002504033435
     job_queue.run_daily(send_rappel, time(hour=9), chat_id=chat_id_groupe)
@@ -118,6 +117,7 @@ async def main():
     print("✅ Bot lancé avec succès...")
     await app.run_polling()
 
+# Exécution du bot (Render)
 import asyncio
 import nest_asyncio
 
